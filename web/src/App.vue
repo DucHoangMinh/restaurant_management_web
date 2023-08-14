@@ -1,9 +1,11 @@
+<!-- eslint-disable no-unused-vars -->
+<!-- eslint-disable no-unused-vars -->
+<!-- eslint-disable no-unused-vars -->
 <template>
-  <p>Hoàng Minh Đức</p>
+  <router-view></router-view>
 </template>
 
 <script>
-
 export default {
   name: 'App',
   components: {
