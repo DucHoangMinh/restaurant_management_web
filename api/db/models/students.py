@@ -1,0 +1,28 @@
+import peewee as p
+from . import db
+from .base import Base
+
+
+class Students(Base):
+    student_id = p.BigIntegerField()
+    fullname = p.TextField()
+    dob = p.DateField()
+    email = p.TextField()
+    password = p.TextField()
+    sex = p.BooleanField()
+    phone = p.BigIntegerField()
+    address = p.TextField()
+    date_of_join = p.DateField()
+
+    class Meta:
+        db_table = 'students'
+
+    @classmethod
+    def get_all_students(cls):
+        get_list = list(cls.select())
+        students_list = [student[0] for student in get_list]
+        return students_list
+
+
+db.create_tables([Students], safe=True)
+print(Students.get_all_students())

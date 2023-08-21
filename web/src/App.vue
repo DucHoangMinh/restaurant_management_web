@@ -1,6 +1,4 @@
 <!-- eslint-disable no-unused-vars -->
-<!-- eslint-disable no-unused-vars -->
-<!-- eslint-disable no-unused-vars -->
 <template>
   <router-view></router-view>
 </template>

@@ -1,6 +1,6 @@
 from peewee import *
 from playhouse.postgres_ext import PostgresqlExtDatabase
-from config import POSTGRE_DATABASE, POSTGRE_HOST, POSTGRE_USER, POSTGRE_PASSWORD
+from .config import POSTGRE_DATABASE, POSTGRE_HOST, POSTGRE_USER, POSTGRE_PASSWORD
 
 db = PostgresqlExtDatabase(
     POSTGRE_DATABASE,
