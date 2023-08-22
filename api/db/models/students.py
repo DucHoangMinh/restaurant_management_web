@@ -1,10 +1,11 @@
 import peewee as p
 from . import db
 from .base import Base
-
+from flask import jsonify
+from playhouse.shortcuts import model_to_dict
 
 class Students(Base):
-    student_id = p.BigIntegerField()
+    student_id = p.BigIntegerField(primary_key=True)
     fullname = p.TextField()
     dob = p.DateField()
     email = p.TextField()
@@ -20,9 +21,9 @@ class Students(Base):
     @classmethod
     def get_all_students(cls):
         get_list = list(cls.select())
-        students_list = [student[0] for student in get_list]
+        students_list = [model_to_dict(student) for student in get_list]
         return students_list
 
 
 db.create_tables([Students], safe=True)
-print(Students.get_all_students())
+# print((Students.get_all_students()))
