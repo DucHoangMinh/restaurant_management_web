@@ -1,0 +1,38 @@
+version: '3'
+services:
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    ports:
+      - "1234:80"
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+  db:
+    image: postgres:14.1
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4:7.4
+    volumes:
+      - pgvolume:/pgdata
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=hoangminhduc4125@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=hoangminhduc4125
+      - PGADMIN_LISTEN_PORT=5555
+    network_mode: host
+volumes:
+  db:
+    driver: local
+  pgvolume:
+    driver: local
