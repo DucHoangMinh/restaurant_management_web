@@ -19,6 +19,7 @@
     "core-js": "^3.8.3",
     "font-awesome": "^4.7.0",
     "vue": "^3.2.13",
+    "vue-cli": "^2.9.6",
     "vue-router": "^4.2.4",
     "vuelidate": "^0.7.7",
     "vuetify": "^3.3.12",

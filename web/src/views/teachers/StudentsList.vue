@@ -34,20 +34,33 @@
                     <thead>
                     <tr>
                         <th class="text-center">Name</th>
-                        <th class="text-center">Email</th>
                         <th class="text-center">Sex</th>
+                        <th class="text-center">Email</th>
                         <th class="text-center">Phone</th>
                         <th class="text-center">Address</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
-                        <!-- <tr
-                            v-for="item in studentsList"
-                            :key="item.id"
+                        <tr
+                            v-for="(item,index) in studentsList"
+                            :key="index"
+                            style="padding: 4px;"
                         >
                             <td>{{ item.name }}</td>
-                            <td>{{ item.calories }}</td>
-                        </tr> -->
+                            <td>{{ item.sex ? 'Nam' : 'Nữ' }}</td>
+                            <td>{{ item.email }}</td>
+                            <td>{{ item.phone }}</td>
+                            <td>{{ item.address }}</td>
+                            <td class="d-flex justify-center align-center">
+                                <div class="editButton rounded-circle" style="padding: 6px;background-color: #3bd16f;" >
+                                    <font-awesome-icon icon="fa-solid fa-pen" color="#fff" style="cursor: pointer;"/>
+                                </div>
+                                <div class="deleteButton ml-4 rounded-circle" style="padding: 6px;background-color:  #f32013;">
+                                    <font-awesome-icon icon="fa-solid fa-trash" color="#fff" style="cursor: pointer;"/>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </v-table>
             </div>
@@ -59,7 +72,19 @@
     import axios from 'axios'
     export default {
         setup() {
-            const studentsList= ref([])
+            const studentsList= ref([{
+                name: 'Hoàng Minh Đức',
+                sex: true,
+                email:'hoangminhduc4125@gmail.com',
+                phone: '0869870245',
+                address:'Hà Trung, Thanh Hóa'
+            },{
+                name: 'Hoàng Minh Khánh',
+                sex: true,
+                email:'hoangminhkhanh4125@gmail.com',
+                phone: '0869870249',
+                address:'Hà Trung, Thanh Hóa'
+            }])
 
             async function getStudentList(){
                 try {
@@ -69,11 +94,12 @@
                     console.log(error)
                 }
             }
+            // eslint-disable-next-line no-unused-vars
             async function setUpData(){
                 studentsList.value = await getStudentList()
             }
             onMounted(() => {
-                setUpData();
+                // setUpData();
             });
             return {
                 studentsList,
@@ -82,7 +108,7 @@
     }
 </script>
 <style>
-    .v-field {
+    /* .v-field {
         padding: 4px 0px !important;
-    }
+    } */
 </style>
