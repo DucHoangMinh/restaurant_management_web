@@ -1,5 +1,45 @@
 <template>
     <v-container>
+        <!-- Add student dialog -->
+        <v-row justify="center">
+            <v-dialog
+                v-model="adddialog"
+                max-width="500"
+            >
+            <v-card>
+                <v-card-title class="addFormTitle">
+                    <span>New student</span>
+                </v-card-title>
+                <v-card-text>
+                <v-container>
+                    <label class="inputFieldTitle">Name</label>
+                    <v-text-field density="compact" variant="outlined" v-model="student.fullname"></v-text-field>
+                    <label class="inputFieldTitle">Phone</label>
+                    <v-text-field density="compact" variant="outlined" type="number" v-model="student.phone"></v-text-field>
+                    <label>Email</label>
+                    <v-text-field density="compact" variant="outlined" v-model="student.email" type="email" class="inputEmail"></v-text-field>
+                    <label class="inputFieldTitle">Date of birth</label>
+                    <v-text-field density="compact" variant="outlined" type="date" v-model="student.dob"></v-text-field>
+                    <div class="pb-4 d-flex align-center justify-space-between">
+                        <label>Giới tính: {{ sex }}</label>
+                        <div class="d-flex align-center justify-space-between">
+                            <input type="radio" value="Nam" v-model="student.sex" style="cursor: pointer;">
+                                <label>Nam</label>
+                            <input class="ml-4" type="radio" v-model="student.sex" value="Nữ" style="cursor: pointer;">
+                                <label>Nữ</label>
+                        </div>
+                    </div>
+                    <lable>Address</lable>
+                    <v-textarea density="compact" rows="2" auto-grow variant="outlined"></v-textarea>
+                </v-container>
+                </v-card-text>
+                <v-card-actions class="delCardAction">
+                    <v-btn class="confirmDelButton" @click="adddialog = false">Cancel</v-btn>
+                    <v-btn class="" @click="handleAddStudent">Add</v-btn>
+                </v-card-actions>
+            </v-card>
+            </v-dialog>
+        </v-row>
         <div id="heading">
             <div class="heading__wrapper d-flex align-center justify-space-between" 
                 style="border-bottom: 1px solid #ccc;padding: 12px;margin:12px">
@@ -21,7 +61,7 @@
                     <v-text-field label="Tìm kiếm theo tên" variant="outlined" style="min-width: 200px;"></v-text-field>
                 </div>
                 <div class="createNewStudent">
-                    <v-btn color="#3bd16f" style="color: #fff;">
+                    <v-btn color="#3bd16f" style="color: #fff;" @click="adddialog = true">
                         New student
                         <font-awesome-icon style="margin-left: 8px;" class="" icon="fa-solid fa-user-plus"/>
                     </v-btn>
@@ -71,6 +111,11 @@
     import {ref , onMounted} from 'vue'
     import axios from 'axios'
     export default {
+        data() {
+            return {
+                adddialog: true,
+            }
+        },
         setup() {
             const studentsList= ref([{
                 name: 'Hoàng Minh Đức',
@@ -85,7 +130,6 @@
                 phone: '0869870249',
                 address:'Hà Trung, Thanh Hóa'
             }])
-
             async function getStudentList(){
                 try {
                     let query = await axios.get('http://127.0.0.1:5000/students')
@@ -98,11 +142,24 @@
             async function setUpData(){
                 studentsList.value = await getStudentList()
             }
+
+            const student = ref({
+                    fullname: '',
+                    dob: null,
+                    email: '',
+                    sex: 0,
+                    phone: 0,
+                    address: '',
+            })
+            async function handleAddStudent(){
+                console.log(student.value)
+            }
+
             onMounted(() => {
                 // setUpData();
             });
             return {
-                studentsList,
+                studentsList, student, handleAddStudent
             };
         },  
     }

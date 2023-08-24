@@ -5,7 +5,7 @@ from flask import jsonify
 from playhouse.shortcuts import model_to_dict
 
 class Students(Base):
-    student_id = p.BigIntegerField(primary_key=True)
+    student_id = p.AutoField(primary_key=True)
     fullname = p.TextField()
     dob = p.DateField()
     email = p.TextField()
