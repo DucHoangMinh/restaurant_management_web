@@ -3,7 +3,7 @@
         <!-- Add student dialog -->
         <v-row justify="center">
             <v-dialog
-                v-model="adddialog"
+                v-model="dialog"
                 max-width="500"
             >
             <v-card>
@@ -34,7 +34,7 @@
                 </v-container>
                 </v-card-text>
                 <v-card-actions class="delCardAction">
-                    <v-btn class="confirmDelButton" @click="adddialog = false">Cancel</v-btn>
+                    <v-btn class="confirmDelButton" @click="dialog = false">Cancel</v-btn>
                     <v-btn class="" @click="handleAddStudent">Add</v-btn>
                 </v-card-actions>
             </v-card>
@@ -62,7 +62,7 @@
                     <v-text-field label="Tìm kiếm theo tên" variant="outlined" style="min-width: 200px;"></v-text-field>
                 </div>
                 <div class="createNewStudent">
-                    <v-btn color="#3bd16f" style="color: #fff;" @click="adddialog = true">
+                    <v-btn color="#3bd16f" style="color: #fff;" @click="dialog = true">
                         New student
                         <font-awesome-icon style="margin-left: 8px;" class="" icon="fa-solid fa-user-plus"/>
                     </v-btn>
@@ -116,7 +116,7 @@
     import SnackBar from '@/views/components/SnackBar.vue'
     export default {
         setup() {
-            const adddialog = ref(false)
+            const dialog = ref(false)
             const snackbar = ref({
                 showSnackbar: false,
                 message: 'Đây là Hoàng Minh Đức',
@@ -136,6 +136,7 @@
                 studentsList.value = await getStudentList()
             }
 
+            // Handle with the student
             const student = ref({
                     fullname: '',
                     dob: null,
@@ -149,7 +150,7 @@
                     console.log(student.value)
                     await axios.post('http://127.0.0.1:5000/students',student.value)
                     showMessage()
-                    adddialog.value = false
+                    dialog.value = false
                 }
                 catch(err){
                     console.log('Error: ', err)
@@ -164,14 +165,27 @@
                 snackbar.value.message = 'Đây là thông báo từ snackbar.';
                 snackbar.value.showSnackbar = true;
             }
+            // Handle edit students
+            function setData(params){
+                student.value.fullname = params.fullname
+                student.value.dob = params.dob
+                student.value.email = params.email
+                student.value.sex = params.sex
+                student.value.phone = params.phone
+                student.value.address = params.address
+            }
+            function handleEditStudent(params){
+                setData(params)
+                dialog.value = true
+            }
             return {
-                adddialog,
-                studentsList, 
-                student, 
-                handleAddStudent, 
-                showMessage,
-                snackbar
-            };
+                dialog,
+                snackbar,
+                studentsList,
+                student,
+                handleAddStudent,
+                handleEditStudent
+            }
         },  
     }
 </script>

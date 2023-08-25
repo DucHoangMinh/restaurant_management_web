@@ -1,9 +1,9 @@
-FROM node:18.15.0 as build-stage
+FROM node:latest
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY ./ .
-RUN npm run build
+RUN npm run serve
 
 FROM nginx as production-stage
 RUN mkdir /app
