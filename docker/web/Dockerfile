@@ -1,11 +1,2 @@
-FROM node:latest
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY ./ .
-RUN npm run serve
-
-FROM nginx as production-stage
-RUN mkdir /app
-COPY --from=build-stage /app/dist /app
-COPY nginx.conf /etc/nginx/nginx.conf
+FROM node:17-buster-slim
+RUN npm install @vue/cli --location=global

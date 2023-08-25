@@ -1,20 +1,34 @@
 services:
   web:
-    build:
-      context: ./docker/web
-      dockerfile: Dockerfile
+    build: docker/web
+    working_dir: /src/web
+    # user: "1000"
+    user: "${COMPOSE_UID:-1000}:${COMPOSE_GID:-1000}"
+    volumes:
+      - ./web:/src/web
     ports:
-      - "3000:80"
+      - "8080:8080"
+    command: [ "npm", "run", "serve" ]
+
 
   api:
-    build:
-      context: ./docker/api
-      dockerfile: Dockerfile
+    build: docker/api
+    volumes:
+      - ./api:/var/task
+    working_dir: /var/task
     ports:
-      - "5000:5000"
+      - "127.0.0.1:5000:5000"
+    user: "${COMPOSE_UID:-1000}:${COMPOSE_GID:-1000}"
+    environment:
+      - HOME=/tmp
+
+    entrypoint: [ 'poetry', 'run' ]
+    command: ["flask", "run", "--host=0.0.0.0"]
+    env_file: ./docker/.env
+    depends_on: [db]
 
   db:
-    build: docker/db
+    image: postgres:14-alpine
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
@@ -22,18 +36,8 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=default
 
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
-      - PGADMIN_DEFAULT_PASSWORD=admin
-    ports:
-      - "5555:80"
-    depends_on:
-      - db
-    logging:
-      driver: none
 
 volumes:
   db-data:

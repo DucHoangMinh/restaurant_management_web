@@ -173,6 +173,7 @@
                 student.value.sex = params.sex
                 student.value.phone = params.phone
                 student.value.address = params.address
+                dialog.value = true
             }
             function handleEditStudent(params){
                 setData(params)

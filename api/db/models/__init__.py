@@ -7,5 +7,6 @@ db = PostgresqlExtDatabase(
     user=POSTGRE_USER,
     password=POSTGRE_PASSWORD,
     host=POSTGRE_HOST,
-    autorollback=True
+    autorollback=True,
+    port=5432
 )

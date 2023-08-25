@@ -4,6 +4,7 @@ app = Flask(__name__)
 CORS(app)
 import db.controllers.students
 
-@app.route('/', methods=['GET','POST'])
+@app.route('/', methods=['GET'])
 def test():
         return 'students'
+print('This is a test')
