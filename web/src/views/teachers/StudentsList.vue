@@ -30,7 +30,7 @@
                         </div>
                     </div>
                     <lable>Address</lable>
-                    <v-textarea density="compact" rows="2" auto-grow variant="outlined"></v-textarea>
+                    <v-textarea v-model="student.address" density="compact" rows="2" auto-grow variant="outlined"></v-textarea>
                 </v-container>
                 </v-card-text>
                 <v-card-actions class="delCardAction">
@@ -40,6 +40,7 @@
             </v-card>
             </v-dialog>
         </v-row>
+        <!-- Delete student dialog -->
         <div id="heading">
             <div class="heading__wrapper d-flex align-center justify-space-between" 
                 style="border-bottom: 1px solid #ccc;padding: 12px;margin:12px">
@@ -73,7 +74,7 @@
                 <v-table density="compact">
                     <thead>
                     <tr>
-                        <th class="text-center">Name</th>
+                        <th class="text-left">Name</th>
                         <th class="text-center">Sex</th>
                         <th class="text-center">Email</th>
                         <th class="text-center">Phone</th>
@@ -87,8 +88,8 @@
                             :key="index"
                             style="padding: 4px;"
                         >
-                            <td>{{ item.name }}</td>
-                            <td>{{ item.sex ? 'Nam' : 'Nữ' }}</td>
+                            <td class="text-left">{{ item.fullname }}</td>
+                            <td>{{ item.sex }}</td>
                             <td>{{ item.email }}</td>
                             <td>{{ item.phone }}</td>
                             <td>{{ item.address }}</td>
@@ -106,33 +107,25 @@
             </div>
         </div>
     </v-container>
+    <SnackBar ref="snackbar" v-model:showSnackbar="snackbar.showSnackbar" :message="snackbar.message" />
 </template>
 <script>
     import {ref , onMounted} from 'vue'
     import axios from 'axios'
+    // eslint-disable-next-line no-unused-vars
+    import SnackBar from '@/views/components/SnackBar.vue'
     export default {
-        data() {
-            return {
-                adddialog: true,
-            }
-        },
         setup() {
-            const studentsList= ref([{
-                name: 'Hoàng Minh Đức',
-                sex: true,
-                email:'hoangminhduc4125@gmail.com',
-                phone: '0869870245',
-                address:'Hà Trung, Thanh Hóa'
-            },{
-                name: 'Hoàng Minh Khánh',
-                sex: true,
-                email:'hoangminhkhanh4125@gmail.com',
-                phone: '0869870249',
-                address:'Hà Trung, Thanh Hóa'
-            }])
+            const adddialog = ref(false)
+            const snackbar = ref({
+                showSnackbar: false,
+                message: 'Đây là Hoàng Minh Đức',
+            });
+            const studentsList= ref([])
             async function getStudentList(){
                 try {
                     let query = await axios.get('http://127.0.0.1:5000/students')
+                    console.log(query.data)
                     return query.data
                 } catch (error) {
                     console.log(error)
@@ -147,19 +140,37 @@
                     fullname: '',
                     dob: null,
                     email: '',
-                    sex: 0,
+                    sex: '',
                     phone: 0,
                     address: '',
             })
             async function handleAddStudent(){
-                console.log(student.value)
+                try{
+                    console.log(student.value)
+                    await axios.post('http://127.0.0.1:5000/students',student.value)
+                    showMessage()
+                    adddialog.value = false
+                }
+                catch(err){
+                    console.log('Error: ', err)
+                }
             }
 
             onMounted(() => {
-                // setUpData();
-            });
+                setUpData();
+            })
+
+            function showMessage() {
+                snackbar.value.message = 'Đây là thông báo từ snackbar.';
+                snackbar.value.showSnackbar = true;
+            }
             return {
-                studentsList, student, handleAddStudent
+                adddialog,
+                studentsList, 
+                student, 
+                handleAddStudent, 
+                showMessage,
+                snackbar
             };
         },  
     }

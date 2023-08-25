@@ -10,7 +10,7 @@ class Students(Base):
     dob = p.DateField()
     email = p.TextField()
     password = p.TextField()
-    sex = p.BooleanField()
+    sex = p.TextField()
     phone = p.BigIntegerField()
     address = p.TextField()
     date_of_join = p.DateField()
@@ -25,5 +25,7 @@ class Students(Base):
         return students_list
 
 
+db.connect()
 db.create_tables([Students], safe=True)
+db.close()
 # print((Students.get_all_students()))
