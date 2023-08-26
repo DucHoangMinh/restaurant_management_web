@@ -1,12 +1,20 @@
 <template>
     <v-container>
-        <!-- Add student dialog -->
+        <!-- Delete student dialog -->
         <v-row justify="center">
             <v-dialog
-                v-model="dialog"
+                v-model="deldialog"
                 max-width="500"
             >
-                <DynamicForm :form="addForm" />
+              <v-card>
+                <v-card-text>
+                  Bạn có chắc chắn muốn xóa sinh viên {{ studentToDel.fullname }}
+                </v-card-text>
+                <div class="d-flex align-center justify-space-between">
+                  <v-btn color="green" @click="deldialog = false">Hủy</v-btn>
+                  <v-btn color="warning" @click="handleDelete">Xác nhận xóa</v-btn>
+                </div>
+              </v-card>
             </v-dialog>
         </v-row>
         <!-- Delete student dialog -->
@@ -31,7 +39,7 @@
                     <v-text-field label="Tìm kiếm theo tên" variant="outlined" style="min-width: 200px;"></v-text-field>
                 </div>
                 <div class="createNewStudent">
-                    <v-btn color="#3bd16f" style="color: #fff;" @click="dialog = true">
+                    <v-btn color="#3bd16f" style="color: #fff;" @click="toCreatePage">
                         New student
                         <font-awesome-icon style="margin-left: 8px;" class="" icon="fa-solid fa-user-plus"/>
                     </v-btn>
@@ -61,13 +69,17 @@
                             <td>{{ item.sex }}</td>
                             <td>{{ item.email }}</td>
                             <td>{{ item.phone }}</td>
-                            <td>{{ item.address }}</td>
+                            <td>{{item.address}}</td>
                             <td class="d-flex justify-center align-center">
                                 <div class="editButton rounded-circle" style="padding: 6px;background-color: #3bd16f;" >
-                                    <font-awesome-icon icon="fa-solid fa-pen" color="#fff" style="cursor: pointer;"/>
+                                    <font-awesome-icon icon="fa-solid fa-pen" color="#fff"
+                                     @click="() => toEditPage(item)"
+                                     style="cursor: pointer;"/>
                                 </div>
-                                <div class="deleteButton ml-4 rounded-circle" style="padding: 6px;background-color:  #f32013;">
-                                    <font-awesome-icon icon="fa-solid fa-trash" color="#fff" style="cursor: pointer;"/>
+                                <div class="deleteButton ml-4 rounded-circle"
+                                     @click="() => openDelDialog(item)"
+                                     style="padding: 6px;background-color:  #f32013;cursor: pointer">
+                                    <font-awesome-icon icon="fa-solid fa-trash" color="#fff"/>
                                 </div>
                             </td>
                         </tr>
@@ -79,96 +91,70 @@
     <SnackBar ref="snackbar" v-model:showSnackbar="snackbar.showSnackbar" :message="snackbar.message" />
 </template>
 <script>
-import {ref, onMounted, reactive} from 'vue'
-    import axios from 'axios'
-    import { TextField, EmailField } from '@asigloo/vue-dynamic-forms';
+import {ref, onMounted} from 'vue'
+import axios from 'axios'
+import {useRouter} from 'vue-router'
+export default {
+    setup() {
+      const deldialog = ref(false)
+      const router = useRouter()
+      const studentToDel = ref(null)
+        const snackbar = ref({
+            showSnackbar: false,
+            message: 'Đây là Hoàng Minh Đức',
+        });
+        const studentsList= ref([])
+        async function getStudentList(){
+            try {
+                let query = await axios.get('http://127.0.0.1:5000/students')
+                return query.data
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        // eslint-disable-next-line no-unused-vars
+        async function setUpData(){
+            studentsList.value = await getStudentList()
+        }
 
-    export default {
-        setup() {
-            const dialog = ref(false)
-            const snackbar = ref({
-                showSnackbar: false,
-                message: 'Đây là Hoàng Minh Đức',
-            });
-            const studentsList= ref([])
-            async function getStudentList(){
-                try {
-                    let query = await axios.get('http://127.0.0.1:5000/students')
-                    console.log(query.data)
-                    return query.data
-                } catch (error) {
-                    console.log(error)
-                }
-            }
-            // eslint-disable-next-line no-unused-vars
-            async function setUpData(){
-                studentsList.value = await getStudentList()
-            }
 
-            // Handle with the student
-            const student = ref({
-                    fullname: '',
-                    dob: null,
-                    email: '',
-                    sex: '',
-                    phone: 0,
-                    address: '',
-            })
-            async function handleAddStudent(){
-                try{
-                    console.log(student.value)
-                    await axios.post('http://127.0.0.1:5000/students',student.value)
-                    showMessage()
-                    dialog.value = false
-                }
-                catch(err){
-                    console.log('Error: ', err)
-                }
-            }
 
-            onMounted(() => {
-                setUpData();
-            })
+        onMounted(() => {
+            setUpData();
+        })
 
-            function showMessage() {
-                snackbar.value.message = 'Đây là thông báo từ snackbar.';
-                snackbar.value.showSnackbar = true;
-            }
-            // Handle edit students
-            function setData(params){
-                student.value.fullname = params.fullname
-                student.value.dob = params.dob
-                student.value.email = params.email
-                student.value.sex = params.sex
-                student.value.phone = params.phone
-                student.value.address = params.address
-                dialog.value = true
-            }
-            function handleEditStudent(params){
-                setData(params)
-                dialog.value = true
-            }
-            const addForm = reactive({
-                id:"addform",
-                 fields: {
-                  name: TextField({
-                    label: 'Name',
-                  }),
-                  email: EmailField({
-                    label: 'Email',
-                  }),
-                },
-            })
-            return {
-                dialog,
-                snackbar,
-                studentsList,
-                student,
-                handleAddStudent,
-                handleEditStudent,
-                addForm
-            }
-        },  
+        function showMessage() {
+            snackbar.value.message = 'Đây là thông báo từ snackbar.';
+            snackbar.value.showSnackbar = true;
+        }
+        function toCreatePage(){
+          router.push('/teachers/student-list/add')
+        }
+        function toEditPage(email){
+          router.push(
+            `/teachers/student-list/edit/${email}`,
+          )
+        }
+        function openDelDialog(student){
+          studentToDel.value = student;
+          deldialog.value = true
+        }
+        async function handleDelete(){
+          await axios.delete(`http://127.0.0.1:5000/students/${studentToDel.value.email}`)
+          router.push('/teachers/student-list')
+        }
+        return {
+          snackbar,
+          studentsList,
+          showMessage,
+          toCreatePage,
+          toEditPage,
+          deldialog,
+          openDelDialog,
+          studentToDel,
+          handleDelete
+        }
+    },
     }
 </script>
 <style>

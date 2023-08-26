@@ -7,7 +7,7 @@ CORS(app)
 app.register_blueprint(students_bp)
 @app.route('/', methods=['GET'])
 def test():
-        return 'mya students'
+        return 'myassst students'
 print('This is a test')
 
 import db.controllers.students
