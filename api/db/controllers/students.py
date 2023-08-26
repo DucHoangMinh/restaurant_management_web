@@ -1,16 +1,16 @@
 from db.models.students import Students
-from main import app
-from flask import  request
+from flask import  request, Blueprint
 import random
 import string
+students_bp = Blueprint('students', __name__)
 
-
-@app.route('/students', methods=['GET'])
+@students_bp.route('/students', methods=['GET'])
 def get_all_students():
+    print("how")
     return Students.get_all_students()
 
 
-@app.route('/students', methods=['POST'])
+@students_bp.route('/students', methods=['POST'])
 def create_student():
     print(request)
     student = Students(

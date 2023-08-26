@@ -6,38 +6,7 @@
                 v-model="dialog"
                 max-width="500"
             >
-            <v-card>
-                <v-card-title class="addFormTitle">
-                    <span>New student</span>
-                </v-card-title>
-                <v-card-text>
-                <v-container>
-                    <label class="inputFieldTitle">Name</label>
-                    <v-text-field density="compact" variant="outlined" v-model="student.fullname"></v-text-field>
-                    <label class="inputFieldTitle">Phone</label>
-                    <v-text-field density="compact" variant="outlined" type="number" v-model="student.phone"></v-text-field>
-                    <label>Email</label>
-                    <v-text-field density="compact" variant="outlined" v-model="student.email" type="email" class="inputEmail"></v-text-field>
-                    <label class="inputFieldTitle">Date of birth</label>
-                    <v-text-field density="compact" variant="outlined" type="date" v-model="student.dob"></v-text-field>
-                    <div class="pb-4 d-flex align-center justify-space-between">
-                        <label>Giới tính: {{ sex }}</label>
-                        <div class="d-flex align-center justify-space-between">
-                            <input type="radio" value="Nam" v-model="student.sex" style="cursor: pointer;">
-                                <label>Nam</label>
-                            <input class="ml-4" type="radio" v-model="student.sex" value="Nữ" style="cursor: pointer;">
-                                <label>Nữ</label>
-                        </div>
-                    </div>
-                    <lable>Address</lable>
-                    <v-textarea v-model="student.address" density="compact" rows="2" auto-grow variant="outlined"></v-textarea>
-                </v-container>
-                </v-card-text>
-                <v-card-actions class="delCardAction">
-                    <v-btn class="confirmDelButton" @click="dialog = false">Cancel</v-btn>
-                    <v-btn class="" @click="handleAddStudent">Add</v-btn>
-                </v-card-actions>
-            </v-card>
+                <DynamicForm :form="addForm" />
             </v-dialog>
         </v-row>
         <!-- Delete student dialog -->
@@ -110,10 +79,10 @@
     <SnackBar ref="snackbar" v-model:showSnackbar="snackbar.showSnackbar" :message="snackbar.message" />
 </template>
 <script>
-    import {ref , onMounted} from 'vue'
+import {ref, onMounted, reactive} from 'vue'
     import axios from 'axios'
-    // eslint-disable-next-line no-unused-vars
-    import SnackBar from '@/views/components/SnackBar.vue'
+    import { TextField, EmailField } from '@asigloo/vue-dynamic-forms';
+
     export default {
         setup() {
             const dialog = ref(false)
@@ -179,13 +148,25 @@
                 setData(params)
                 dialog.value = true
             }
+            const addForm = reactive({
+                id:"addform",
+                 fields: {
+                  name: TextField({
+                    label: 'Name',
+                  }),
+                  email: EmailField({
+                    label: 'Email',
+                  }),
+                },
+            })
             return {
                 dialog,
                 snackbar,
                 studentsList,
                 student,
                 handleAddStudent,
-                handleEditStudent
+                handleEditStudent,
+                addForm
             }
         },  
     }

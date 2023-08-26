@@ -13,9 +13,9 @@ services:
 
   api:
     build: docker/api
+    working_dir: /var/task
     volumes:
       - ./api:/var/task
-    working_dir: /var/task
     ports:
       - "127.0.0.1:5000:5000"
     user: "${COMPOSE_UID:-1000}:${COMPOSE_GID:-1000}"
@@ -23,8 +23,7 @@ services:
       - HOME=/tmp
 
     entrypoint: [ 'poetry', 'run' ]
-    command: ["flask", "run", "--host=0.0.0.0"]
-    env_file: ./docker/.env
+    command: ["python", "main.py"]
     depends_on: [db]
 
   db:
