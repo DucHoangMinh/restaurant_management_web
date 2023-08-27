@@ -36,7 +36,7 @@
             </div>
             <div class="heading__filter d-flex justify-space-between align-center">
                 <div class="">
-                    <v-text-field label="Tìm kiếm theo tên" variant="outlined" style="min-width: 200px;"></v-text-field>
+                    <v-text-field density="compact" label="Tìm kiếm theo tên" variant="outlined" style="min-width: 200px;"></v-text-field>
                 </div>
                 <div class="createNewStudent">
                     <v-btn color="#3bd16f" style="color: #fff;" @click="toCreatePage">
@@ -71,14 +71,14 @@
                             <td>{{ item.phone }}</td>
                             <td>{{item.address}}</td>
                             <td class="d-flex justify-center align-center">
-                                <div class="editButton rounded-circle" style="padding: 6px;background-color: #3bd16f;" >
+                                <div class="editButton rounded-circle d-flex align-center" style="width: 30px;height: 30px;padding: 6px;background-color: #3bd16f;" >
                                     <font-awesome-icon icon="fa-solid fa-pen" color="#fff"
                                      @click="() => toEditPage(item)"
                                      style="cursor: pointer;"/>
                                 </div>
-                                <div class="deleteButton ml-4 rounded-circle"
+                                <div class="deleteButton ml-4 rounded-circle d-flex align-center justify-center"
                                      @click="() => openDelDialog(item)"
-                                     style="padding: 6px;background-color:  #f32013;cursor: pointer">
+                                     style="width: 30px;height: 30px;padding: 6px;background-color:  #f32013;cursor: pointer">
                                     <font-awesome-icon icon="fa-solid fa-trash" color="#fff"/>
                                 </div>
                             </td>
@@ -89,12 +89,15 @@
         </div>
     </v-container>
     <SnackBar ref="snackbar" v-model:showSnackbar="snackbar.showSnackbar" :message="snackbar.message" />
+    <Footer></Footer>
 </template>
 <script>
 import {ref, onMounted} from 'vue'
 import axios from 'axios'
 import {useRouter} from 'vue-router'
+import Footer from "@/views/components/Footer.vue";
 export default {
+  components: {Footer},
     setup() {
       const deldialog = ref(false)
       const router = useRouter()
@@ -132,7 +135,7 @@ export default {
         }
         function toEditPage(email){
           router.push(
-            `/teachers/student-list/edit/${email}`,
+            `/teachers/student-list/edit/${email.email}`,
           )
         }
         function openDelDialog(student){

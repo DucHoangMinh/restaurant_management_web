@@ -12,8 +12,8 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
-import { faUserSecret , faUser, faUserPlus, faSchool, faPen, faTrash} from '@fortawesome/free-solid-svg-icons'
-library.add(faUserSecret, faUser, faUserPlus, faSchool, faPen, faTrash)
+import { faUserSecret , faUser, faUserPlus, faSchool, faPen, faTrash,faHouse,faRightToBracket,faLink} from '@fortawesome/free-solid-svg-icons'
+library.add(faUserSecret, faUser, faUserPlus, faSchool, faPen, faTrash, faHouse, faRightToBracket, faLink)
 
 const vuetify = createVuetify({
   components,

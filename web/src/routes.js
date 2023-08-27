@@ -2,7 +2,7 @@ import LoginPage from './views/homepage/Login.vue'
 import Dashboard from './views/dashboards/DashBoard.vue'
 import StudentsList from './views/teachers/StudentsList.vue'
 import AddStudent from './views/teachers/AddStudent.vue'
-import SchoolBackground from "@/views/homepage/SchoolBackground.vue";
+import SchoolBackground from "@/views/components/SchoolBackground.vue";
 import EditStudent from "@/views/teachers/EditStudent.vue";
 import HomePage from "@/views/homepage/HomePage.vue";
 import { createRouter, createWebHistory } from 'vue-router'
