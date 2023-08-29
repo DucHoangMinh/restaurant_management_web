@@ -1,6 +1,5 @@
 import peewee as p
 from .base import Base
-from flask_jwt_extended import create_access_token
 from .__init__ import db
 
 class Teacher(Base):
@@ -36,5 +35,4 @@ class Teacher(Base):
         return access_token
 
 
-db.connect()
 db.create_tables([Teacher], safe=True)

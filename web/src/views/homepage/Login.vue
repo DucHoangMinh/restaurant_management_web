@@ -19,14 +19,16 @@
             label="Email"
             variant="outlined"
             class="pb-4"
+            v-model="email"
           ></v-text-field>
           <v-text-field
             type="password"
             label="Password"
             variant="outlined"
             class="pb-4"
+            v-model="password"
           ></v-text-field>
-          <v-btn color="green">Đăng nhập</v-btn>
+          <v-btn color="green" @click="handleLogin">Đăng nhập</v-btn>
         </v-form>
       </v-sheet>
     </div>
@@ -39,13 +41,28 @@ import SchoolBackground from "@/views/components/SchoolBackground.vue";
 import Navigation from "@/views/components/Navigation.vue";
 import Footer from "@/views/components/Footer.vue";
 import {defineComponent, ref} from "vue";
+import axios from "axios";
 
 export default defineComponent({
   components: {Footer, Navigation, SchoolBackground},
   setup(){
     const role_selection = ref('Học sinh')
+    const email = ref(null)
+    const password = ref(null)
+
+    async function handleLogin() {
+      const account = {
+        email:email.value,
+        password:password.value
+      }
+      console.log(account)
+      await axios.post('http://127.0.0.1:5000/login', account)
+    }
     return {
-      role_selection
+      role_selection,
+      email,
+      password,
+      handleLogin
     }
   }
 },

@@ -3,7 +3,7 @@ from . import db
 from .base import Base
 from flask import jsonify
 from playhouse.shortcuts import model_to_dict
-
+from .account import Accounts
 class Students(Base):
     student_id = p.AutoField(primary_key=True)
     fullname = p.TextField()
@@ -17,6 +17,28 @@ class Students(Base):
 
     class Meta:
         db_table = 'students'
+    @classmethod
+    def create_new_students(cls, request):
+        student = cls(
+            fullname=request.json['fullname'],
+            dob=request.json['dob'],
+            email=request.json['email'],
+            sex=request.json['sex'],
+            phone=request.json['phone'],
+            address=request.json['address'],
+            date_of_join=request.json.get('date_of_join'),
+            password=request.json.get('password')
+        )
+        try:
+            student.save()
+        except Exception as e:
+            print('Error: ', e)
+        Accounts.create_account({
+            'email' : student.email,
+            'password':student.password,
+            'role': 'student'
+        })
+        return student.password
 
     @classmethod
     def get_all_students(cls):

@@ -14,22 +14,7 @@ def get_all_students():
 
 @students_bp.route('/students', methods=['POST'])
 def create_student():
-    print(request)
-    student = Students(
-        fullname=request.json['fullname'],
-        dob=request.json['dob'],
-        email=request.json['email'],
-        sex=request.json['sex'],
-        phone=request.json['phone'],
-        address=request.json['address'],
-        date_of_join=request.json.get('date_of_join'),
-        password=request.json.get('password')
-    )
-    try:
-        student.save()
-    except Exception as e:
-        print('Error: ', e)
-    return student.password
+    return Students.create_new_students(request)
 
 
 @students_bp.route('/students/<email>', methods=['GET'])
