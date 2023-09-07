@@ -1,41 +1,45 @@
 services:
+  # Dịch vụ "web"
   web:
-    build: docker/web
-    working_dir: /src/web
-    # user: "1000"
-    user: "${COMPOSE_UID:-1000}:${COMPOSE_GID:-1000}"
+    build: docker/web  # Sử dụng Dockerfile từ thư mục "docker/web" để xây dựng container
+    working_dir: /src/web  # Đặt thư mục làm việc trong container là "/src/web"
+    # user: "1000"  # (Dòng bị comment lại) Đặt user ID cho container (không sử dụng trong trường hợp này)
+    user: "${COMPOSE_UID:-1000}:${COMPOSE_GID:-1000}"  # Đặt user và group ID cho container từ biến môi trường COMPOSE_UID và COMPOSE_GID. Mặc định là 1000 nếu biến không tồn tại.
     volumes:
-      - ./web:/src/web
+      - ./web:/src/web  # Liên kết thư mục hiện tại với "/src/web" trong container
     ports:
-      - "8080:8080"
-    command: ["npm", "run", "serve"]
+      - "8080:8080"  # Liên kết cổng máy host 8080 với cổng 8080 trong container
+    command: ["npm", "run", "serve"]  # Chạy lệnh "npm run serve" trong container
 
+  # Dịch vụ "api"
   api:
-    build: docker/api
-    working_dir: /var/task
+    build: docker/api  # Sử dụng Dockerfile từ thư mục "docker/api" để xây dựng container
+    working_dir: /var/task  # Đặt thư mục làm việc trong container là "/var/task"
     volumes:
-      - ./api:/var/task
+      - ./api:/var/task  # Liên kết thư mục hiện tại với "/var/task" trong container
     ports:
-      - "127.0.0.1:5000:5000"
-    user: "${COMPOSE_UID:-1000}:${COMPOSE_GID:-1000}"
+      - "127.0.0.1:5000:5000"  # Liên kết cổng máy host 5000 với cổng 5000 trong container (chỉ lắng nghe trên localhost)
+    user: "${COMPOSE_UID:-1000}:${COMPOSE_GID:-1000}"  # Đặt user và group ID cho container từ biến môi trường COMPOSE_UID và COMPOSE_GID. Mặc định là 1000 nếu biến không tồn tại.
     environment:
-      - HOME=/tmp
+      - HOME=/tmp  # Đặt biến môi trường HOME trong container là "/tmp"
 
-    entrypoint: ["poetry", "run"]
-    command: ["python", "main.py"]
-    depends_on: [db]
+    entrypoint: ["poetry", "run"]  # Sử dụng "poetry run" như entrypoint trong container
+    command: ["python", "main.py"]  # Chạy lệnh "python main.py" trong container
+    depends_on: [db]  # Đảm bảo rằng dịch vụ "db" được khởi động trước khi dịch vụ "api" được khởi động
 
+  # Dịch vụ "db"
   db:
-    image: postgres:14-alpine
+    image: postgres:14-alpine  # Sử dụng ảnh PostgreSQL phiên bản 14 trên Alpine Linux
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data  # Liên kết thư mục dữ liệu của PostgreSQL với volume "db-data"
     ports:
-      - "4000:5432"
+      - "4000:5432"  # Liên kết cổng máy host 4000 với cổng 5432 của PostgreSQL trong container
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=default
+      - POSTGRES_USER=postgres  # Đặt tên người dùng PostgreSQL là "postgres"
+      - POSTGRES_PASSWORD=postgres  # Đặt mật khẩu cho người dùng là "postgres"
+      - POSTGRES_DB=default  # Đặt tên cơ sở dữ liệu là "default"
 
+# Định nghĩa volume "db-data" để lưu trữ dữ liệu của PostgreSQL
 volumes:
   db-data:
-    driver: local
+    driver: local  # Sử dụng driver "local" cho volume

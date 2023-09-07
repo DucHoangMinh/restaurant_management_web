@@ -2,13 +2,12 @@ from db.models.students import Students
 from flask import request, Blueprint
 import random
 import string
-
+from utils.controllers import token_required
 students_bp = Blueprint('students', __name__)
 
 
 @students_bp.route('/students', methods=['GET'])
 def get_all_students():
-    print("how")
     return Students.get_all_students()
 
 
@@ -18,8 +17,9 @@ def create_student():
 
 
 @students_bp.route('/students/<email>', methods=['GET'])
-def get_student_by_id(email):
-    return Students.get_student_by_id(email)
+@token_required
+def get_student_by_email(email):
+    return Students.get_student_by_email(email)
 
 
 @students_bp.route('/students/<id>', methods=['PATCH'])

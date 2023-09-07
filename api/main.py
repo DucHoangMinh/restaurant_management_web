@@ -6,6 +6,10 @@ import jwt
 from datetime import datetime, timedelta
 from functools import wraps
 from db.models.account import Accounts
+from dotenv import load_dotenv
+load_dotenv()
+import os
+SECRET_KEY=os.getenv('SECRET_KEY')
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'g}/lVKCOmv)kvhWBNV;+}_}.eJ(]n`Y:d,O|q44lgMIHeHp|G;27>KS2,ynEDhJ'
 CORS(app)
@@ -22,7 +26,6 @@ def token_required(func):
         try:
             payload = jwt.decode(token, app.config['SECRET_KEY'],algorithms=["HS256"])
         except Exception as e:
-            print(e)
             return jsonify({'Alert': 'Token is invalid'})
         return func(*args, **kwargs)
     return decorator
@@ -35,13 +38,16 @@ def handle_login():
             'user': request.json['email'],
             'expiration': str(datetime.utcnow() + timedelta(seconds=120))
         }, app.config['SECRET_KEY'])
-        return jsonify({'token': token})
+        return jsonify(
+            {'token': token},
+            {'email': request.json['email']}
+        )
     else:
         return make_response('Unable to verify' ,403,{'WWW-Authenticate': 'Basic realm: Authentication Failed'})
 
 @app.route('/', methods=['GET'])
 def test():
-    return 'myassst students'
+    return 'API RESPONSE SUCCESS !!!'
 
 @app.route('/testtoken', methods=['GET'])
 @token_required

@@ -42,21 +42,28 @@ import Navigation from "@/views/components/Navigation.vue";
 import Footer from "@/views/components/Footer.vue";
 import {defineComponent, ref} from "vue";
 import axios from "axios";
+import {useRouter} from "vue-router"
 
 export default defineComponent({
   components: {Footer, Navigation, SchoolBackground},
   setup(){
+    const ROUTER = useRouter()
     const role_selection = ref('Học sinh')
     const email = ref(null)
     const password = ref(null)
-
+    function save_token_to_cookie(access_token){
+      document.cookie = `token=${access_token};path=/`
+    }
     async function handleLogin() {
       const account = {
         email:email.value,
         password:password.value
       }
       console.log(account)
-      await axios.post('http://127.0.0.1:5000/login', account)
+      let response = await axios.post('http://127.0.0.1:5000/login', account)
+      await save_token_to_cookie(response.data[0].token)
+      document.cookie = `email=${response.data[1].email};path=/`
+      ROUTER.push('/student/dashboard')
     }
     return {
       role_selection,

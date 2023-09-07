@@ -46,7 +46,7 @@ class Students(Base):
         students_list = [model_to_dict(student) for student in get_list]
         return students_list
     @classmethod
-    def get_student_by_id(cls,email):
+    def get_student_by_email(cls,email):
         get_student = list(cls.select().where(cls.email == email))
         return jsonify(model_to_dict(get_student[0]))
     @classmethod

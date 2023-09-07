@@ -14,9 +14,26 @@
   import Navigation from "@/views/components/Navigation.vue";
   import SchoolBackground from "@/views/components/SchoolBackground.vue";
   import Footer from "@/views/components/Footer.vue";
+  import {useRouter} from "vue-router"
+  import {onMounted} from "vue"
   export default {
     name:'HomePage',
     components: {Footer, SchoolBackground, Navigation},
+    setup(){
+      const router = useRouter()
+      function checkLoginedOrNot() {
+        let token = document.cookie.match(/token=([^;]+)/)
+        return !!token
+      }
+      function decideRoute(){
+        if(checkLoginedOrNot()){
+          router.push('/student/dashboard')
+        }
+      }
+      onMounted(() => {
+        decideRoute()
+      })
+    }
   }
 </script>
 <style>
