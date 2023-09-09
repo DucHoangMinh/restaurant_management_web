@@ -1,7 +1,7 @@
 <template>
     <v-snackbar
       :timeout="2000"
-      v-model="showSnackbar"
+      v-model="showSnackbarState"
     >
       {{ message }}
     </v-snackbar>
@@ -9,24 +9,25 @@
 <style>
 </style>
 <script>
- import { ref } from 'vue';
-
+import {ref,watch} from 'vue'
 export default {
-    props: {
-        timeout: {
-        type: Number,
-        default: 2000,
-        },
+  props: {
+    timeout: {
+      type: Number,
+      default: 2000,
     },
-    emits: ['update:showSnackbar'],
-    // eslint-disable-next-line no-unused-vars
-    setup(props) {
-        const showSnackbar = ref(false);
-        const message = ref('');
-        return {
-            showSnackbar,
-            message,
-        };
-    },
-    };
+    message: String,
+    showSnackbar: Boolean
+  },
+  setup(props){
+    const showSnackbarState = ref(true)
+    watch(() => props.showSnackbar, (newData) => {
+      showSnackbarState.value = newData
+      console.log(newData)
+    })
+    return {
+      showSnackbarState
+    }
+  }
+}
 </script>

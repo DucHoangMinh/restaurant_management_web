@@ -4,7 +4,7 @@ services:
     build: docker/web  # Sử dụng Dockerfile từ thư mục "docker/web" để xây dựng container
     working_dir: /src/web  # Đặt thư mục làm việc trong container là "/src/web"
     # user: "1000"  # (Dòng bị comment lại) Đặt user ID cho container (không sử dụng trong trường hợp này)
-    user: "${COMPOSE_UID:-1000}:${COMPOSE_GID:-1000}"  # Đặt user và group ID cho container từ biến môi trường COMPOSE_UID và COMPOSE_GID. Mặc định là 1000 nếu biến không tồn tại.
+    user: "1000:1000" # Đặt user và group ID cho container từ biến môi trường COMPOSE_UID và COMPOSE_GID. Mặc định là 1000 nếu biến không tồn tại.
     volumes:
       - ./web:/src/web  # Liên kết thư mục hiện tại với "/src/web" trong container
     ports:
@@ -19,7 +19,7 @@ services:
       - ./api:/var/task  # Liên kết thư mục hiện tại với "/var/task" trong container
     ports:
       - "127.0.0.1:5000:5000"  # Liên kết cổng máy host 5000 với cổng 5000 trong container (chỉ lắng nghe trên localhost)
-    user: "${COMPOSE_UID:-1000}:${COMPOSE_GID:-1000}"  # Đặt user và group ID cho container từ biến môi trường COMPOSE_UID và COMPOSE_GID. Mặc định là 1000 nếu biến không tồn tại.
+    user: "1000:1000"  # Đặt user và group ID cho container từ biến môi trường COMPOSE_UID và COMPOSE_GID. Mặc định là 1000 nếu biến không tồn tại.
     environment:
       - HOME=/tmp  # Đặt biến môi trường HOME trong container là "/tmp"
 

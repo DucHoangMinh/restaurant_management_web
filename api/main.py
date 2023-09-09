@@ -7,28 +7,17 @@ from datetime import datetime, timedelta
 from functools import wraps
 from db.models.account import Accounts
 from dotenv import load_dotenv
+from utils.controllers import token_required
 load_dotenv()
 import os
 SECRET_KEY=os.getenv('SECRET_KEY')
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'g}/lVKCOmv)kvhWBNV;+}_}.eJ(]n`Y:d,O|q44lgMIHeHp|G;27>KS2,ynEDhJ'
+app.config['SECRET_KEY'] = SECRET_KEY
 CORS(app)
 
 app.register_blueprint(students_bp)
 app.register_blueprint(login_bp)
 
-def token_required(func):
-    @wraps(func)
-    def decorator(*args, **kwargs):
-        token = request.headers.get('token')
-        if not token:
-            return jsonify({'Alert': 'Token is missing'})
-        try:
-            payload = jwt.decode(token, app.config['SECRET_KEY'],algorithms=["HS256"])
-        except Exception as e:
-            return jsonify({'Alert': 'Token is invalid'})
-        return func(*args, **kwargs)
-    return decorator
 
 @app.route('/login', methods=['POST'])
 def handle_login():
@@ -36,7 +25,7 @@ def handle_login():
         session['logged_in'] = True
         token = jwt.encode({
             'user': request.json['email'],
-            'expiration': str(datetime.utcnow() + timedelta(seconds=120))
+            'expiration': str(datetime.utcnow() + timedelta(seconds=12000))
         }, app.config['SECRET_KEY'])
         return jsonify(
             {'token': token},

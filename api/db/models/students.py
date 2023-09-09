@@ -11,7 +11,7 @@ class Students(Base):
     email = p.TextField()
     password = p.TextField()
     sex = p.TextField()
-    phone = p.BigIntegerField()
+    phone = p.TextField()
     address = p.TextField()
     date_of_join = p.DateField()
 
@@ -47,8 +47,10 @@ class Students(Base):
         return students_list
     @classmethod
     def get_student_by_email(cls,email):
-        get_student = list(cls.select().where(cls.email == email))
-        return jsonify(model_to_dict(get_student[0]))
+        getted_list = list(cls.select().where(cls.email == email))
+        getted_student = getted_list[0] if len(getted_list) >= 1 else None
+        return jsonify(model_to_dict(getted_student))
+
     @classmethod
     def patch_student_by_id(cls, request, id):
         student = list(cls.select().where(cls.student_id == id))[0]
@@ -73,7 +75,7 @@ class Students(Base):
         except Exception as e:
             print("Failed to delete student ", e)
         return "Deleted"
+
 db.connect()
 db.create_tables([Students], safe=True)
 db.close()
-# print((Students.get_all_students()))

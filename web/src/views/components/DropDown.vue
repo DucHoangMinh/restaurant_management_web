@@ -1,12 +1,18 @@
 <template lang="pug">
-.dropdown-wrapper
+.dropdown-wrapper()
   .dropdown-triangle
   div(v-for="item in dropdownList")
     label(@click="() => handleDropdownClick(item)").dropdown-item.pr-4.pl-4.pt-1.pb-1.d-block {{ item }}
 </template>
 <script>
+  import { onMounted} from "vue";
   import {useRouter} from "vue-router";
-  export default {name: 'DropDown', setup(){
+  export default {
+    name: 'DropDown',
+    props: {
+      email : String
+    },
+    setup(props){
       const router = useRouter()
       const dropdownList = [
         'Thông tin tài khoản',
@@ -18,6 +24,11 @@
         switch(item){
           case 'Đăng xuất': {
             handleLogout()
+            break
+          }
+          case 'Thông tin tài khoản' : {
+            toStudentInfor()
+            break
           }
         }
       }
@@ -26,6 +37,12 @@
         document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/";
         router.push('/')
       }
+      function toStudentInfor(){
+        router.push(`/student/infor/${props.email}`)
+      }
+      onMounted(() => {
+        console.log(props.email)
+      })
       return {
         dropdownList,
         handleDropdownClick
