@@ -26,6 +26,7 @@
     "sass-loader": "^13.3.2",
     "scss": "^0.2.4",
     "vue": "^3.2.13",
+    "vue-cal": "^4.8.1",
     "vue-cli": "^2.9.6",
     "vue-date-pick": "^1.5.1",
     "vue-router": "^4.2.4",

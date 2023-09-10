@@ -1,5 +1,6 @@
 from flask_cors import CORS
 from db.controllers.students import students_bp
+from db.controllers.tasks import tasks_bp
 from auth.login import login_bp
 from flask import Flask, request, jsonify, make_response,render_template,session, Blueprint
 import jwt
@@ -17,6 +18,7 @@ CORS(app)
 
 app.register_blueprint(students_bp)
 app.register_blueprint(login_bp)
+app.register_blueprint(tasks_bp)
 
 
 @app.route('/login', methods=['POST'])

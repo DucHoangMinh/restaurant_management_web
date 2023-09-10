@@ -23,6 +23,7 @@ def get_student_by_email(email):
 
 
 @students_bp.route('/students/<id>', methods=['PATCH'])
+@token_required
 def patch_student_byid(id):
     return Students.patch_student_by_id(request, id)
 @students_bp.route('/students/<email>', methods=['DELETE'])

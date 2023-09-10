@@ -17,8 +17,9 @@
       const dropdownList = [
         'Thông tin tài khoản',
         'Khóa học của bạn',
+        'Quản lý công việc',
         'Cài đặt',
-        'Đăng xuất',
+        'Đăng xuất'
       ]
       function handleDropdownClick(item){
         switch(item){

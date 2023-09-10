@@ -7,6 +7,7 @@ import EditStudent from "@/views/teachers/EditStudent.vue";
 import HomePage from "@/views/homepage/HomePage.vue";
 import StudentDashBoard from "@/views/students/DashBoard.vue"
 import StudentInfor from "@/views/students/StudentInfor.vue";
+import StudentTaskManager from "@/views/students/taskManager/index.vue"
 import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
     { path : '/login',  name: 'LoginPage', component: LoginPage},
@@ -17,7 +18,8 @@ const routes = [
     {path : '/teachers/student-list/edit/:email', name: EditStudent, component: EditStudent},
     {path : '/',name:'HomePage', component: HomePage},
     {path : '/student/dashboard', component: StudentDashBoard},
-    {path : '/student/infor/:email',component: StudentInfor}
+    {path : '/student/infor/:email',component: StudentInfor},
+    {path : '/student/taskmanager',component: StudentTaskManager},
 ]
 const router = createRouter({
     history: createWebHistory(),

@@ -17,7 +17,7 @@ v-container.pt-16
             v-text-field(variant="outlined" density="compact" v-model="student.fullname")
           .infor-item.d-flex.justify-start.align-center.pb-4
             label.v-col-3.text-left Ngày sinh:
-            VueDatePicker(v-model="student.dob" :enable-time-picker="false")
+            VueDatePicker(v-model="student.dob" :enable-time-picker="false" format="dd-MM-yyyy")
           .infor-item.d-flex.justify-start.align-center.pb-4
             label.v-col-3.text-left Giới tính:
             input.input-radio.mr-1(value='Nam' type='radio' name='sex' v-model='student.sex')
@@ -57,6 +57,7 @@ import SnackBar from "@/views/components/SnackBar.vue";
     setup(){
       const route = useRoute()
       const student = ref({
+        student_id:null,
         fullname: null,
         dob: null,
         email: null,
@@ -68,15 +69,15 @@ import SnackBar from "@/views/components/SnackBar.vue";
       const dropdownState = ref(false)
       const snackbarMessage = ref('')
       const snackbarState = ref(false)
+      const email = ref(route.params.email)
 
       async function getStudentInfor(){
-        let email = route.params.email
         let config = {
           headers: {
             token : mixin.methods.getCookieValue('token')
           }
         }
-        const tempData = await axios.get(`http://127.0.0.1:5000/students/${email}`,config)
+        const tempData = await axios.get(`http://127.0.0.1:5000/students/${email.value}`,config)
         return tempData.data
       }
       async function setUpData(){
@@ -87,11 +88,21 @@ import SnackBar from "@/views/components/SnackBar.vue";
         dropdownState.value = !dropdownState.value
       }
       async function handleChangeStudentInfor(){
-        snackbarMessage.value = 'test'
+        let config = {
+          headers: {
+            token : mixin.methods.getCookieValue('token')
+          }
+        }
+        try {
+          await axios.patch(`http://127.0.0.1:5000/students/${student.value.student_id}`,student.value,config)
+        }catch (e){
+          console.log(e)
+        }
+        snackbarMessage.value = 'Cập nhật thông tin của bạn thành công'
         snackbarState.value = true
         setTimeout(() => {
           snackbarState.value = false
-        },2000)
+        },5000)
       }
       onMounted(() => {
         setUpData()
