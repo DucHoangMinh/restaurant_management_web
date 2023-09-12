@@ -31,6 +31,9 @@
             toStudentInfor()
             break
           }
+          case 'Quản lý công việc': {
+            toTaskManage()
+          }
         }
       }
       async function handleLogout() {
@@ -40,6 +43,9 @@
       }
       function toStudentInfor(){
         router.push(`/student/infor/${props.email}`)
+      }
+      function toTaskManage(){
+        router.push('/student/taskmanager')
       }
       onMounted(() => {
         console.log(props.email)

@@ -15,6 +15,11 @@ v-dialog(v-model='addTaskDialog' width='50%' height="80%" )
       v-btn(color='primary'  @click='addTaskDialog = false') Hủy
       v-btn(color="green" @click="addTask") Thêm
 Navigation
+  .header__username
+    font-awesome-icon(icon='fa-solid fa-user' style="color: white").mr-2
+    label(style="color: white").pr-2 Hoang Minh Duc
+    font-awesome-icon(icon='fa-solid fa-bars' color='white' style="cursor: pointer;" @click="changeDropdownState")
+    DropDown.drop-down(v-if="dropdownState" :email="email")
 v-container
   .addTaskButton.pb-8.text-right(style="cursor:pointer")
     v-btn(color="green" style="font-size:14px" @click="addTaskDialog = true") Thêm công việc mới
@@ -25,6 +30,7 @@ v-container
   import {ref, onMounted} from 'vue'
   import VueCal from 'vue-cal'
   import Navigation from "@/views/components/Navigation.vue";
+  import DropDown from "@/views/components/DropDown.vue";
   import VueDatePicker from '@vuepic/vue-datepicker';
   import 'vue-cal/dist/vuecal.css'
   import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
@@ -36,11 +42,17 @@ v-container
       FontAwesomeIcon,
       Navigation,
       VueCal,
-      VueDatePicker
+      VueDatePicker,
+      DropDown
     },
     setup(){
       const addTaskDialog = ref(false)
       const events = ref([])
+      const dropdownState = ref(false)
+      const email = ref(mixin.methods.getCookieValue('email'))
+      function changeDropdownState(){
+        dropdownState.value = !dropdownState.value
+      }
       const task = ref({
         title: '',
         start: '',
@@ -72,6 +84,7 @@ v-container
               token: mixin.methods.getCookieValue('token')
             }
           })
+          console.log(res.data)
           return res.data
       }
       async function setUpData(){
@@ -89,7 +102,10 @@ v-container
         addTask,
         addTaskDialog,
         task,
-        events
+        events,
+        dropdownState,
+        changeDropdownState,
+        email
       }
     }
   }

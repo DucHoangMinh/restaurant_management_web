@@ -4,7 +4,7 @@ from .base import Base
 from flask import jsonify
 from datetime import datetime
 from playhouse.shortcuts import model_to_dict
-
+import pytz
 
 class Tasks(Base):
     task_id = p.AutoField(null=False)
@@ -33,8 +33,24 @@ class Tasks(Base):
         return 'Successfully'
     @classmethod
     def get_all_tasks_by_email(cls, email):
-        getted_list = (list(cls.select().where(cls.email==email)))
-        response = [model_to_dict(item) for item in getted_list]
+        getted_list = list(cls.select().where(cls.email == email))
+
+        # Đặt múi giờ mà bạn muốn chuyển đổi (ví dụ: 'Asia/Ho_Chi_Minh')
+        desired_timezone = pytz.timezone('Asia/Ho_Chi_Minh')
+
+        response = []
+
+        for item in getted_list:
+            # Chuyển đổi múi giờ của start và end trước khi trả về
+            start_in_desired_timezone = pytz.timezone('UTC').localize(item.start)
+            end_in_desired_timezone = pytz.timezone('UTC').localize(item.end)
+
+            item_dict = model_to_dict(item)
+            item_dict['start'] = start_in_desired_timezone.strftime('%Y-%m-%d %H:%M:%S')
+            item_dict['end'] = end_in_desired_timezone.strftime('%Y-%m-%d %H:%M:%S')
+
+            response.append(item_dict)
+
         return response
 db.connect()
 db.create_tables([Tasks], safe=True)

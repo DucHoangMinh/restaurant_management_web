@@ -1,6 +1,6 @@
 import peewee as p
-from .base import Base
-from .__init__ import db
+from base import Base
+from __init__ import db
 
 class Teacher(Base):
     teacher_id = p.BigIntegerField()
@@ -34,5 +34,6 @@ class Teacher(Base):
         access_token = create_access_token(identity=self.id)
         return access_token
 
-
+db.connect()
 db.create_tables([Teacher], safe=True)
+db.close()

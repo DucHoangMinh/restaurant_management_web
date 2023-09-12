@@ -8,12 +8,14 @@ import HomePage from "@/views/homepage/HomePage.vue";
 import StudentDashBoard from "@/views/students/DashBoard.vue"
 import StudentInfor from "@/views/students/StudentInfor.vue";
 import StudentTaskManager from "@/views/students/taskManager/index.vue"
+import TeacherManagePoints from "@/views/teachers/studentsPoint/index.vue"
 import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
     { path : '/login',  name: 'LoginPage', component: LoginPage},
     {path : '/dashboard', name: 'Dashboard',component: Dashboard},
     {path : '/teachers/student-list', name: 'StudentList', component: StudentsList},
     {path : '/teachers/student-list/add', name: 'AddStudent', component: AddStudent},
+    {path:  '/teachers/points/:classroom_id', name:'TeacherManagePoints', component: TeacherManagePoints},
     {path : '/schoolbackground', name: 'SchoolBackground', component: SchoolBackground},
     {path : '/teachers/student-list/edit/:email', name: EditStudent, component: EditStudent},
     {path : '/',name:'HomePage', component: HomePage},
