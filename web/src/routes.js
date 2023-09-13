@@ -9,15 +9,19 @@ import StudentDashBoard from "@/views/students/DashBoard.vue"
 import StudentInfor from "@/views/students/StudentInfor.vue";
 import StudentTaskManager from "@/views/students/taskManager/index.vue"
 import TeacherManagePoints from "@/views/teachers/studentsPoint/index.vue"
+import TeacherDashBoard from "@/views/teachers/DashBoard.vue"
+import TeacherAddPoint from "@/views/teachers/studentsPoint/AddPoint.vue"
 import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
     { path : '/login',  name: 'LoginPage', component: LoginPage},
     {path : '/dashboard', name: 'Dashboard',component: Dashboard},
     {path : '/teachers/student-list', name: 'StudentList', component: StudentsList},
     {path : '/teachers/student-list/add', name: 'AddStudent', component: AddStudent},
-    {path:  '/teachers/points/:classroom_id', name:'TeacherManagePoints', component: TeacherManagePoints},
+    {path:  '/teachers/points', name:'TeacherManagePoints', component: TeacherManagePoints},
+    {path:  '/teachers/points/add/:class_id', name: 'TeacherAddPoints',component: TeacherAddPoint},
     {path : '/schoolbackground', name: 'SchoolBackground', component: SchoolBackground},
     {path : '/teachers/student-list/edit/:email', name: EditStudent, component: EditStudent},
+    {path : '/teachers/dashboard', name: 'TeacherDashBoard', component: TeacherDashBoard},
     {path : '/',name:'HomePage', component: HomePage},
     {path : '/student/dashboard', component: StudentDashBoard},
     {path : '/student/infor/:email',component: StudentInfor},

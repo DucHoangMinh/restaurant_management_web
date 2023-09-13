@@ -21,11 +21,8 @@ class Accounts(Base):
 
     @classmethod
     def check_exists_account(cls, account):
-        get_account = list(cls.select().where((cls.email == account.json['email']) & (cls.password == account.json['password'])))
-        if (len(get_account) >= 1):
-            return True
-        else:
-            return False
+        get_account = list(cls.select().where((cls.email == account.json['email']) & (cls.password == account.json['password'])))[0]
+        return get_account.role if get_account else False
 
 db.connect()
 db.create_tables([Accounts], safe=True)

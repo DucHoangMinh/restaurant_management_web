@@ -52,6 +52,12 @@ class Students(Base):
         return jsonify(model_to_dict(getted_student))
 
     @classmethod
+    def get_student_by_id(cls, id):
+        getted_list = list(cls.select().where(cls.student_id == id))
+        getted_student = getted_list[0] if len(getted_list) >= 1 else None
+        return getted_student
+
+    @classmethod
     def patch_student_by_id(cls, request, id):
         student = list(cls.select().where(cls.student_id == id))[0]
         student.fullname = request.json.get('fullname')

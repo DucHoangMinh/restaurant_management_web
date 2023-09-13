@@ -10,13 +10,15 @@
   export default {
     name: 'DropDown',
     props: {
-      email : String
+      email : String,
+      isTeacher : Boolean,
     },
     setup(props){
       const router = useRouter()
       const dropdownList = [
         'Thông tin tài khoản',
         'Khóa học của bạn',
+        props.isTeacher ? 'Quản lý điểm học sinh' : null,
         'Quản lý công việc',
         'Cài đặt',
         'Đăng xuất'
@@ -33,6 +35,10 @@
           }
           case 'Quản lý công việc': {
             toTaskManage()
+            break
+          }
+          case 'Quản lý điểm học sinh': {
+            toScoreManage()
           }
         }
       }
@@ -40,6 +46,9 @@
         document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/";
         document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/";
         router.push('/')
+      }
+      function toScoreManage(){
+        router.push('/teachers/points')
       }
       function toStudentInfor(){
         router.push(`/student/infor/${props.email}`)

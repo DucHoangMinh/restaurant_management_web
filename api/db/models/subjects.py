@@ -12,6 +12,9 @@ class Subject(Base):
 
     class Meta:
         db_table = 'subjects'
+    @classmethod
+    def get_subject_by_id(cls, id):
+        return jsonify(model_to_dict(list(cls.select().where(cls.subject_id == id))[0]))
 
 db.connect()
 db.create_tables([Subject], safe=True)

@@ -6,14 +6,6 @@
       <v-sheet width="350" class="">
         <v-form fast-fail @submit.prevent>
           <v-label style="color: black" class="ma-8 text-h5">Đăng nhập vào hệ thống</v-label>
-          <div class="d-flex align-center pb-6">
-            <v-label class="pr-4">Chọn vai trò của bạn: </v-label>
-            <v-select
-                density="compact"
-                v-model="role_selection"
-                variant="outlined"
-                :items="['Giáo viên', 'Học sinh', 'Người quản trị']"/>
-          </div>
           <v-text-field
             type="email"
             label="Email"
@@ -59,11 +51,16 @@ export default defineComponent({
         email:email.value,
         password:password.value
       }
-      console.log(account)
       let response = await axios.post('http://127.0.0.1:5000/login', account)
       await save_token_to_cookie(response.data[0].token)
       document.cookie = `email=${response.data[1].email};path=/`
-      ROUTER.push('/student/dashboard')
+      document.cookie = `role=${response.data[2].role};path=/`
+      if(response.data[2].role == 'student'){
+        ROUTER.push('/student/dashboard')
+      }
+      else if(response.data[2].role == 'teacher'){
+        ROUTER.push('/teachers/dashboard')
+      }
     }
     return {
       role_selection,
