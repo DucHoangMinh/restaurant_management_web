@@ -4,21 +4,25 @@ from .base import Base
 from flask import jsonify
 from playhouse.shortcuts import model_to_dict
 class Subject_Result(Base):
-    subject_id = p.BigIntegerField(primary_key=True)
-    classroom_id = p.BigIntegerField(null=False)
-    student_id = p.BigIntegerField(null=False)
-    point = p.IntegerField(null=False)
+    subject_id = p.BigIntegerField()
+    classroom_id = p.BigIntegerField()
+    student_id = p.BigIntegerField()
+    point = p.IntegerField()
     class Meta:
         db_table = 'student_result'
     @classmethod
     def input_result(cls, request):
-        temp = cls(
+        new_point = cls(
             subject_id=1,
             classroom_id=1,
             student_id=1,
             point=1
         )
-        temp.save()
+        try:
+            new_point.save()
+            db.commit()
+        except Exception as e:
+            print(e)
         return jsonify('Success')
 
 
