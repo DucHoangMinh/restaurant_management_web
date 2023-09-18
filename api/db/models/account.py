@@ -15,7 +15,7 @@ class Accounts(Base):
             role = account['role'],
         )
         try:
-            account.save()
+            account.save(force_insert=True)
         except Exception as e:
             print(e)
 

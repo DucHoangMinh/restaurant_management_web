@@ -48,19 +48,14 @@ export default defineComponent({
     }
     async function handleLogin() {
       const account = {
-        email:email.value,
-        password:password.value
+        email: email.value,
+        password: password.value
       }
       let response = await axios.post('http://127.0.0.1:5000/login', account)
       await save_token_to_cookie(response.data[0].token)
       document.cookie = `email=${response.data[1].email};path=/`
       document.cookie = `role=${response.data[2].role};path=/`
-      if(response.data[2].role == 'student'){
-        ROUTER.push('/student/dashboard')
-      }
-      else if(response.data[2].role == 'teacher'){
-        ROUTER.push('/teachers/dashboard')
-      }
+      ROUTER.push('/student/taskmanager')
     }
     return {
       role_selection,

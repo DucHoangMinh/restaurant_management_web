@@ -1,11 +1,6 @@
 from flask_cors import CORS
-from db.controllers.students import students_bp
+from db.controllers.user_infor import students_bp
 from db.controllers.tasks import tasks_bp
-from db.controllers.teachers import teachers_bp
-from db.controllers.subjects import subjects_bp
-from db.controllers.classrooms import classroom_bp
-from db.controllers.student_classroom import std_clsr_bp
-from db.controllers.subject_result import subject_result_bp
 from auth.login import login_bp
 from flask import Flask, request, jsonify, make_response,render_template,session, Blueprint
 import jwt
@@ -24,11 +19,6 @@ CORS(app)
 app.register_blueprint(students_bp)
 app.register_blueprint(login_bp)
 app.register_blueprint(tasks_bp)
-app.register_blueprint(teachers_bp)
-app.register_blueprint(subjects_bp)
-app.register_blueprint(std_clsr_bp)
-app.register_blueprint(classroom_bp)
-app.register_blueprint(subject_result_bp)
 
 @app.route('/login', methods=['POST'])
 def handle_login():

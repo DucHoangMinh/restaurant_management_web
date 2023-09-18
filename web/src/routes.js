@@ -11,6 +11,7 @@ import StudentTaskManager from "@/views/students/taskManager/index.vue"
 import TeacherManagePoints from "@/views/teachers/studentsPoint/index.vue"
 import TeacherDashBoard from "@/views/teachers/DashBoard.vue"
 import TeacherAddPoint from "@/views/teachers/studentsPoint/AddPoint.vue"
+import Register from "@/views/homepage/Register.vue";
 import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
     { path : '/login',  name: 'LoginPage', component: LoginPage},
@@ -26,6 +27,7 @@ const routes = [
     {path : '/student/dashboard', component: StudentDashBoard},
     {path : '/student/infor/:email',component: StudentInfor},
     {path : '/student/taskmanager',component: StudentTaskManager},
+    {path: '/register', component: Register}
 ]
 const router = createRouter({
     history: createWebHistory(),

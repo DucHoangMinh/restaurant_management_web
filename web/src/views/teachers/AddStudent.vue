@@ -1,5 +1,5 @@
 <template>
-    <v-sheet width="500" class="mx-auto">
+    <v-sheet width="500" height="80" class="mx-auto">
     <v-form fast-fail @submit.prevent>
       <v-label>Thêm học sinh mới vào danh sách</v-label>
       <v-text-field

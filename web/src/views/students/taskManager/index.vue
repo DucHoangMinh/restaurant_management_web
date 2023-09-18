@@ -4,7 +4,7 @@ v-dialog(v-model='addTaskDialog' width='50%' height="80%" )
     label.text-center.text-h5.my-4 Đăng ký lịch gặp mặt giáo viên
     .addTaskForm.v-col-8.mx-auto
       .d-flex.align-center.justify-center
-        label.v-col-5 Tên công việc:
+        label.v-col-5 Tên công việc: {{isTeacher ? '(nếu có)' : ''}}
         v-text-field(variant="outlined" density="compact" v-model="task.title")
       .d-flex.align-center.justify-center
         label.v-col-5 Thời gian bắt đầu:
@@ -54,11 +54,13 @@ Navigation
     DropDown.drop-down(v-if="dropdownState" :email="email")
 v-container
   .addTaskButton.pb-8.text-right(style="cursor:pointer")
-    v-btn(color="green" style="font-size:14px" @click="addTaskDialog = true") Thêm công việc mới
+    v-btn(color="green" style="font-size:14px" @click="addTaskDialog = true") {{isTeacher ? 'Đánh dấu lịch bận' : 'Đăng ký lịch làm việc mới'}}
         font-awesome-icon(icon="fa-solid fa-calendar-plus").pl-2
   vue-cal(
     :events="events"
     events-on-month-view
+    :time-from="7 * 60"
+    :time-to="20 * 60"
     active-view="month"
     :on-event-click="onEventClick"
     ).vuecal--green-theme
@@ -89,6 +91,8 @@ v-container
       const events = ref([])
       const dropdownState = ref(false)
       const email = ref(mixin.methods.getCookieValue('email'))
+      const role = ref(mixin.methods.getCookieValue('role'))
+      const isTeacher = ref(false)
       function changeDropdownState(){
         dropdownState.value = !dropdownState.value
       }
@@ -97,7 +101,8 @@ v-container
         start: '',
         end: '',
         email: mixin.methods.getCookieValue('email'),
-        public: true
+        public: true,
+        isTeacher: false
       })
       function resetTaskValues(){
         task.value = {
@@ -115,7 +120,8 @@ v-container
             email: task.value.email,
             start: mixin.methods.formatToPostgreTimeStamp(task.value.start),
             end: mixin.methods.formatToPostgreTimeStamp(task.value.end),
-            public: task.value.public
+            public: task.value.public,
+            isTeacher: role.value == 'teacher'
           }
           console.log(request_data)
           await axios.post('http://127.0.0.1:5000/tasks', request_data, {
@@ -171,9 +177,15 @@ v-container
         location.href = '/student/taskmanager'
         resetTaskValues()
       }
+      function setTeacherOrStudent(){
+        isTeacher.value =mixin.methods.getCookieValue('role') == 'teacher'
+      }
       async function setUpData(){
         events.value =await getTaskList()
-        for(var i = 0; i < events.value.length;i ++){
+        for(let i = 0; i < events.value.length; i ++){
+          if(events.value[i].isTeacher){
+            events.value[i].class = 'teacher_event'
+          }
           events.value[i].start = mixin.methods.formatToPostgreTimeStamp(events.value[i].start)
           events.value[i].end = mixin.methods.formatToPostgreTimeStamp(events.value[i].end)
         }
@@ -190,8 +202,9 @@ v-container
         }
       }
       onMounted(() => {
-        console.log(typeof events.value)
+        setTeacherOrStudent()
         setUpData()
+        console.log(events.value)
       });
       return {
         addTask,
@@ -205,7 +218,9 @@ v-container
         showDialog,
         onEventClick,
         updateTask,
-        deleteTask
+        deleteTask,
+        isTeacher,
+        role
       }
     }
   }
@@ -213,4 +228,8 @@ v-container
 <style lang="sass" scoped>
 ::v-deep .v-input__details
   display: none
+::v-deep .teacher_event
+  padding: 4px
+  background-color: orange !important
+  color: #fff
 </style>

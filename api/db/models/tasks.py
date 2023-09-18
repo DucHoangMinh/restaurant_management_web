@@ -4,7 +4,7 @@ from .base import Base
 from flask import jsonify
 from datetime import datetime
 from playhouse.shortcuts import model_to_dict
-from .students import Students
+from .user_infor import Students
 from .account import Accounts
 import pytz
 
@@ -15,6 +15,7 @@ class Tasks(Base):
     end = p.DateTimeField(null=False)
     title = p.TextField(null=False)
     public = p.BooleanField(null=False)
+    isTeacher = p.BooleanField()
 
     class Meta:
         db_table = 'tasklist'
@@ -28,10 +29,12 @@ class Tasks(Base):
             start=datetime.strptime(request.json['start'], "%Y-%m-%d %H:%M:%S"),
             end=datetime.strptime(request.json['end'], "%Y-%m-%d %H:%M:%S"),
             title= '[' +  student.fullname.upper() + '] ' + request.json['title'],
-            public = True if str(request.json['public']) == 'True' else False
+            public = True if str(request.json['public']) == 'True' else False,
+            isTeacher = True if str(request.json['isTeacher']) == 'True' else False
+
         )
         try:
-            new_task.save()
+            new_task.save(force_insert=True)
         except Exception as e:
             print(e)
         return 'Successfully'

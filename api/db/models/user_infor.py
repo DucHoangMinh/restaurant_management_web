@@ -9,16 +9,16 @@ class Students(Base):
     fullname = p.TextField()
     dob = p.DateField()
     email = p.TextField()
-    password = p.TextField()
     sex = p.TextField()
     phone = p.TextField()
     address = p.TextField()
-    date_of_join = p.DateField()
+    classroom = p.TextField()
+    role = p.TextField()
 
     class Meta:
-        db_table = 'students'
+        db_table = 'user_infor'
     @classmethod
-    def create_new_students(cls, request):
+    def create_new_user(cls, request):
         student = cls(
             fullname=request.json['fullname'],
             dob=request.json['dob'],
@@ -26,19 +26,19 @@ class Students(Base):
             sex=request.json['sex'],
             phone=request.json['phone'],
             address=request.json['address'],
-            date_of_join=request.json.get('date_of_join'),
-            password=request.json.get('password')
+            classroom=request.json['classroom'],
+            role='student'
         )
         try:
-            student.save()
+            student.save(force_insert=True)
         except Exception as e:
             print('Error: ', e)
         Accounts.create_account({
-            'email' : student.email,
-            'password':student.password,
+            'email' : request.json['email'],
+            'password':request.json['password'],
             'role': 'student'
         })
-        return student.password
+        return 'Create new student successful'
 
     @classmethod
     def get_all_students(cls):
