@@ -29,3 +29,13 @@ def put_task_by_id(id):
 @token_required
 def delete_task_by_id(id):
     return Tasks.delete_task_by_id(id)
+
+@tasks_bp.route('/tasks/marknotsuitable/<id>', methods=['PATCH'])
+@token_required
+def mark_not_suitable(id):
+    return Tasks.mark_not_suitable(id)
+
+@tasks_bp.route('/tasks/marksuitable/<id>', methods=['PATCH'])
+@token_required
+def mark_suitable(id):
+    return Tasks.mark_suitable(id)

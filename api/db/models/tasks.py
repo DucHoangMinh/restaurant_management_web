@@ -16,6 +16,7 @@ class Tasks(Base):
     title = p.TextField(null=False)
     public = p.BooleanField(null=False)
     isTeacher = p.BooleanField()
+    status = p.TextField()
 
     class Meta:
         db_table = 'tasklist'
@@ -30,8 +31,8 @@ class Tasks(Base):
             end=datetime.strptime(request.json['end'], "%Y-%m-%d %H:%M:%S"),
             title= '[' +  student.fullname.upper() + '] ' + request.json['title'],
             public = True if str(request.json['public']) == 'True' else False,
-            isTeacher = True if str(request.json['isTeacher']) == 'True' else False
-
+            isTeacher = True if str(request.json['isTeacher']) == 'True' else False,
+            status = 'noconfirm'
         )
         try:
             new_task.save(force_insert=True)
@@ -91,6 +92,24 @@ class Tasks(Base):
         except Exception as e:
             print(e)
         return "Deleted"
+    @classmethod
+    def mark_not_suitable(cls,id):
+        getted_task = list(cls.select().where(cls.task_id == id))[0]
+        getted_task.status = 'notsuitable'
+        try:
+            getted_task.save()
+        except Exception as e:
+            print('Error : ', e)
+        return jsonify('Success')
+    @classmethod
+    def mark_suitable(cls,id):
+        getted_task = list(cls.select().where(cls.task_id == id))[0]
+        getted_task.status = 'suitable'
+        try:
+            getted_task.save()
+        except Exception as e:
+            print('Error : ', e)
+        return jsonify('Success')
 
 db.connect()
 db.create_tables([Tasks], safe=True)

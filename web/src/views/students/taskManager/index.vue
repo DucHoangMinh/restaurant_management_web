@@ -1,5 +1,5 @@
 <template lang="pug">
-v-dialog(v-model='addTaskDialog' width='50%' height="80%" )
+v-dialog(v-model='addTaskDialog' width='50%' height="80%")
   v-card.v-col
     label.text-center.text-h5.my-4 Đăng ký lịch gặp mặt giáo viên
     .addTaskForm.v-col-8.mx-auto
@@ -24,7 +24,7 @@ v-dialog(v-model='addTaskDialog' width='50%' height="80%" )
       v-btn(color="green" @click="addTask") Thêm
 v-dialog(v-model='showDialog' width='50%' height="80%")
     v-card
-      label.text-center.text-h5.my-4 Đăng ký lịch gặp mặt giáo viên
+      label.text-center.text-h5.my-4 Cập nhật lịch gặp mặt giáo viên
       .addTaskForm.v-col-8.mx-auto
         .d-flex.align-center.justify-center
           label.v-col-5 Tên công việc:
@@ -46,12 +46,16 @@ v-dialog(v-model='showDialog' width='50%' height="80%")
         v-btn(color='primary'  @click='showDialog = false') Hủy
         v-btn(color='danger'  @click='deleteTask')  Xóa nhiệm vụ
         v-btn(color="green" @click="updateTask") Cập nhật thông tin
+v-dialog(v-model='confirmStudentScheduleDialog' width='50%' height="80%")
+    v-card
+      v-container
+        div
+          label.text-center.text-h5.my-4 Xác nhận lịch gặp mặt
+        .d-flex.justify-space-around.mb-16.mt-16
+          v-btn(color='primary' @click="confirmStudentScheduleDialog=false") Hủy
+          v-btn(color='danger' @click="() => markAsNotSuitable()")  Đánh dấu là lịch không phù hợp
+          v-btn(color="green" @click="() => markAsSuitable()") Xác nhận là lịch phù hợp
 Navigation
-  .header__username
-    font-awesome-icon(icon='fa-solid fa-user' style="color: white").mr-2
-    label(style="color: white").pr-2 Hoang Minh Duc
-    font-awesome-icon(icon='fa-solid fa-bars' color='white' style="cursor: pointer;" @click="changeDropdownState")
-    DropDown.drop-down(v-if="dropdownState" :email="email")
 v-container
   .addTaskButton.pb-8.text-right(style="cursor:pointer")
     v-btn(color="green" style="font-size:14px" @click="addTaskDialog = true") {{isTeacher ? 'Đánh dấu lịch bận' : 'Đăng ký lịch làm việc mới'}}
@@ -85,6 +89,7 @@ v-container
       DropDown
     },
     setup(){
+      const confirmStudentScheduleDialog = ref(false)
       const selectedEvent = ref({})
       const showDialog = ref(false)
       const addTaskDialog = ref(false)
@@ -112,6 +117,26 @@ v-container
           email: mixin.methods.getCookieValue('email'),
           public: true
         }
+      }
+      async function markAsNotSuitable(){
+        await axios.patch(`http://127.0.0.1:5000/tasks/marknotsuitable/${selectedEvent.value.task_id}`, {}, {
+            headers: {
+              token: mixin.methods.getCookieValue('token')
+            }
+        })
+            .then(() => {
+              location.href = '/student/taskmanager'
+            })
+      }
+      async function markAsSuitable(){
+        await axios.patch(`http://127.0.0.1:5000/tasks/marksuitable/${selectedEvent.value.task_id}`, {}, {
+            headers: {
+              token: mixin.methods.getCookieValue('token')
+            }
+        })
+            .then(() => {
+              location.href = '/student/taskmanager'
+            })
       }
       async function addTask(){
         try {
@@ -186,6 +211,12 @@ v-container
           if(events.value[i].isTeacher){
             events.value[i].class = 'teacher_event'
           }
+          if(events.value[i].status == 'notsuitable'){
+            events.value[i].class = 'notsuitable'
+          }
+          if(events.value[i].status =='suitable'){
+            events.value[i].class ='suitable'
+          }
           events.value[i].start = mixin.methods.formatToPostgreTimeStamp(events.value[i].start)
           events.value[i].end = mixin.methods.formatToPostgreTimeStamp(events.value[i].end)
         }
@@ -199,6 +230,12 @@ v-container
 
           // Prevent navigating to narrower view (default vue-cal behavior).
           e.stopPropagation()
+        }
+        else {
+          if(role.value == 'teacher'){
+            selectedEvent.value = event
+            confirmStudentScheduleDialog.value = true
+          }
         }
       }
       onMounted(() => {
@@ -220,7 +257,10 @@ v-container
         updateTask,
         deleteTask,
         isTeacher,
-        role
+        role,
+        confirmStudentScheduleDialog,
+        markAsNotSuitable,
+        markAsSuitable
       }
     }
   }
@@ -232,4 +272,9 @@ v-container
   padding: 4px
   background-color: orange !important
   color: #fff
+::v-deep .suitable
+  color: #fff
+  background-color: green
+::v-deep .notsuitable
+  background-color: yellow
 </style>

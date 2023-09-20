@@ -1,6 +1,5 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <Navigation></Navigation>
   <div class="d-flex align-center justify-space-around position-relative">
     <div class="">
       <v-sheet width="350" class="">
@@ -30,14 +29,13 @@
 </template>
 <script>
 import SchoolBackground from "@/views/components/SchoolBackground.vue";
-import Navigation from "@/views/components/Navigation.vue";
 import Footer from "@/views/components/Footer.vue";
 import {defineComponent, ref} from "vue";
 import axios from "axios";
 import {useRouter} from "vue-router"
 
 export default defineComponent({
-  components: {Footer, Navigation, SchoolBackground},
+  components: {Footer, SchoolBackground},
   setup(){
     const ROUTER = useRouter()
     const role_selection = ref('Học sinh')

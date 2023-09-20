@@ -1,5 +1,4 @@
 <template lang="pug">
-Navigation
 v-sheet.mx-auto(width='500')
   v-form(fast-fail='' @submit.prevent='')
     v-label.pa-4.text-h5 Đăng ký tài khoản mới

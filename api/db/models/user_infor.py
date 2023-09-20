@@ -49,7 +49,7 @@ class Students(Base):
     def get_student_by_email(cls,email):
         getted_list = list(cls.select().where(cls.email == email))
         getted_student = getted_list[0] if len(getted_list) >= 1 else None
-        return jsonify(model_to_dict(getted_student))
+        return jsonify(model_to_dict(getted_student)) if getted_student else None
 
     @classmethod
     def get_student_by_id(cls, id):
